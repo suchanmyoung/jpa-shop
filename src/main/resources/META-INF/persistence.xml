@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+    <persistence-unit name="hello">
+        <properties>
+            <!-- 필수 속성 -->
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <!-- 옵션 -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+
+            <!-- 개발서버에만 사용하는 게 좋음. 운영 서버에서 실수로 ALTER 치면 시스템 작살 남 -->
+            <!-- 서버 시작 시에 JPA에 맵핑된 Entity들이 Create 됨--> <property name="hibernate.hbm2ddl.auto" value="create" />
+            <!--            종료시점에 TABLE DROP<property name="hibernate.hbm2ddl.auto" value="create-drop" />-->
+            <!--            UPDATE 분만 반영<property name="hibernate.hbm2ddl.auto" value="update" />-->
+            <!--            있는지 확인 없으면 에러<property name="hibernate.hbm2ddl.auto" value="validate" />-->
+        </properties>
+    </persistence-unit>
+</persistence>
