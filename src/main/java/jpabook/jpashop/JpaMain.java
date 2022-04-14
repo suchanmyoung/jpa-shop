@@ -1,5 +1,8 @@
 package jpabook.jpashop;
 
+import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -18,6 +21,10 @@ public class JpaMain {
 
             //JPQL은 엔티티 객체를 대상으로 쿼리를 던짐!
             try {
+
+                Order order = new Order();
+                order.addOrderItem(new OrderItem());
+
                 tx.commit();
             } catch (Exception e) {
                 em.close();
