@@ -1,8 +1,7 @@
 package jpabook.jpashop;
 
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
+
+import jpabook.jpashop.jpql.Member;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -22,22 +21,14 @@ public class JpaMain {
 
             //JPQL은 엔티티 객체를 대상으로 쿼리를 던짐!
             try {
-
-                Member member1 = new Member();
-                member1.setName("member1");
-                em.persist(member1);
+                Member member = new Member();
+                member.setUsername("member1");
+                em.persist(member);
 
                 em.flush();
                 em.clear();
 
-
-                Member m1 = em.find(Member.class, member1.getId());
-                System.out.println("reference " + m1.getClass()                );
-
-                Member reference = em.getReference(Member.class, member1.getId());
-
-//                em.detach(reference);
-                System.out.println("m1 = " + reference.getClass());
+                member.setAge(20);
 
                 tx.commit();
             } catch (Exception e) {

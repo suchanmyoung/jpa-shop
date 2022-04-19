@@ -72,3 +72,41 @@ DDD의 Aggregate Root개념을 구현할 때 유용! < 먼지모르겠음
 * 나이가 18살 이상인 회원을 모두 검색하고 싶다면?
 * 검색을 할 때도 테이블이 아닌 엔티티 객체를 대상으로 검색
 * 모든 DB 데이터를 객체로 변환해서 검색하는 것은 불가능하고, 애플리케이션이 필요한 데이터만 DB에서 불러오려면 검색 조건이 포함된 SQL이 필요
+* SQL을 추상화해서 특정 데이터베이스 SQL에 의존 X
+* JPQL을 한 마디로 정의하면 객체지향 SQL
+* 좀 동적으로 짜고 싶다? -> Criteria 사용... 근데 유지보수 안됨 왜? 못 알아봐서 -> 안 씀 -> QueryDSL을 사용하자!
+* 네이티브 SQL : em.createNativeQuery()
+* API
+  * TypeQuery : 반환 타입이 명확할 때 사용
+  * Query : 반환 타입이 명확하지 않을 때 사용
+  * query.getResultList() : 결과가 하나 이상일 때 -> 결과가 없으면 빈 리스트 반환  
+  * query.getSingleResult() :결과가 정확히 하나, 단일 객체 반환 -> 결과가 없으면 NoResultException, 둘 이상이면 NonUniqueResultException // 스프링 Data JPA 사용하면 -> 결과가 없으면 null 이나 Optional 반환함
+  * 쿼리 파라미터 바인딩 = :username, query.setParameter(name, value);
+* 프로젝션
+  * SELECT 절에 조회할 대상을 지정하는 것
+  * 프로젝션 대상 : 엔티티, 임베디드 타입, 스칼라 타입(숫자, 문자 등 기본 데이터 타입)
+  * DISTINCT로 중복 제거  
+  * 프로젝션으로 가져온 대상은 영속성 컨텐스트(1차 캐시)에서 다 관리된다.
+  * 엔티티 프로젝션은 결과 대상이 몇 십 개 나올 수도 있는데, 다 관리된다.
+  * 스칼라 타입의 경우 DTO를 통해서 받아올 수도 있다.(select 시 new 예약어로 만들어야 함)
+* 페이징 API
+  * query.setFirstResult(몇 번째부터).setMaxResults(몇 번째까지).getResultList();
+* 조인
+  * 세타 조인
+    * 연관 관계 없는 거 막 쪼인
+  * 조인 대상 필터링
+    * SELECT m, t FROM Member m LEFT JOIN m.team t on t.name = 'A'
+    * == LEFT JOIN ON TEAM_ID = t.id and t.name ='A'
+    * 아무 연관관계 없을 때 on을 통해 외부 조인 할 수 있다.
+* 서브쿼리
+  * JPA의 서브쿼리는 WHERE, HAVING 절에서만 사용 가능 하다
+  * Hibernate에서는 select 절에서도 가능
+  * ** FROM절의 서브쿼리(인라인 뷰)는 현재 JPQL에서 불가능 ** -> 정 안되면 네이티브,아니면 가져와서 애플리케이션에서 조작 하거나 쿼리를 두 번 분해해서 날림
+
+### fetch join
+* JPQL에서 성능 최적화를 위해 제공하는 기능
+* 연관된 엔티티나 컬렉션을 SQL 한 번에 함께 조회하는 기능
+* fetchType.EAGER랑 비슷한 느낌
+* ** 즉시 로딩과 fetch join은 아예 다른 기능이다!! **
+  * em.find() 등을 통해서 엔티티 하나만 조회할 때 즉시 로딩으로 설정하면 연관된 팀도 한 쿼리로 가져오도록 최적화 되지만, 
+  * JPQL을 사용하면 연관관계를 즉시로딩으로 설정하는 것과 상관없이 JPQL 자체만으로 SQL로 그대로 번역된다.
