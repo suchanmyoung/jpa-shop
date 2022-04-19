@@ -39,7 +39,6 @@ public class JpaMain {
 //                em.detach(reference);
                 System.out.println("m1 = " + reference.getClass());
 
-
                 tx.commit();
             } catch (Exception e) {
                 em.close();
